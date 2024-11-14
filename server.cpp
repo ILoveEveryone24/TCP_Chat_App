@@ -62,6 +62,10 @@ int main(){
             if(FD_ISSET(0, &readfds)){
                 std::string input;
                 std::getline(std::cin, input);
+                if(input == "/exit"){
+                    std::cout << "Exiting..." << std::endl;
+                    break;
+                }
 
                 inputQueue.push(input);
             }
