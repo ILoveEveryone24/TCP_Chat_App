@@ -9,8 +9,26 @@
 
 #define PORT 4444
 
+void print_with_color(int pair, const std::string &text){
+    if(has_colors()){
+        attron(COLOR_PAIR(pair));
+        printw("%s", text.c_str());
+        attroff(COLOR_PAIR(pair));
+    }
+    else{
+        printw("%s", text.c_str());
+    }
+}
+
 int main(){
     initscr();
+    if(has_colors()){
+        start_color();
+
+        init_pair(1, COLOR_RED, COLOR_BLACK);
+        init_pair(2, COLOR_GREEN, COLOR_BLACK);
+    }
+
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
@@ -67,7 +85,7 @@ int main(){
     int ch;
 
     move(max_rows-1, cols);
-    printw("Server: ");
+    print_with_color(2, "Server: ");
     while(true){
         ch = getch();
         if(ch != ERR){
@@ -81,12 +99,12 @@ int main(){
                     inputQueue.push(text);
 
                     move(rows, cols);
-                    printw("Server: %s", text.c_str());
+                    print_with_color(2, "Server: " + text);
 
                     text.clear();
                     move(max_rows-1, cols);
                     clrtoeol();
-                    printw("Server: ");
+                    print_with_color(2, "Server: ");
                     refresh();
                     rows++;
                 }
@@ -97,7 +115,7 @@ int main(){
                     move(max_rows-1, cols);
                     clrtoeol();
 
-                    printw("Server: %s", text.c_str());
+                    print_with_color(2, "Server: " + text);
                     refresh();
                 }
             }
@@ -106,7 +124,7 @@ int main(){
                 move(max_rows-1, cols);
                 clrtoeol();
 
-                printw("Server: %s", text.c_str());
+                print_with_color(2, "Server: " + text);
                 refresh();
             }
         }
@@ -143,7 +161,7 @@ int main(){
                 else{
                     int tmp_cols = getcurx(stdscr);
                     move(rows, cols);
-                    printw("Client: %s", buffer);
+                    print_with_color(1, "Client: " +  std::string(buffer));
                     move(max_rows-1, tmp_cols);
                     refresh();
                     rows++;
