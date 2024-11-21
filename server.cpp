@@ -96,11 +96,23 @@ int main(){
         if(ch != ERR){
             if(ch == '\n' || ch == KEY_ENTER){
                 if(text == "/exit"){
+                    text.clear();
+
                     printw("Exiting...");
                     refresh();
                     break;
                 }
-                if(!text.empty()){
+                else if(text == "/clear"){
+                    text.clear();
+
+                    clear();
+                    rows = 0;
+                    cols = 0;
+                    move(max_rows-1, cols);
+
+                    print_with_color(2, "Server: ");
+                }
+                else if(!text.empty()){
                     inputQueue.push(text);
 
                     move(rows, cols);

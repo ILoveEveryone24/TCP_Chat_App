@@ -18,9 +18,11 @@ void print_with_color(int pair, const std::string &text){
         attron(COLOR_PAIR(pair));
         printw("%s", text.c_str());
         attroff(COLOR_PAIR(pair));
+        refresh();
     }
     else{
         printw("%s", text.c_str());
+        refresh();
     }
 }
 
@@ -92,11 +94,23 @@ int main(){
         if(ch != ERR){
             if(ch == '\n' || ch == KEY_ENTER){
                 if(text == "/exit"){
+                    text.clear();
+
                     printw("Exiting...");
                     refresh();
                     break;
                 }
-                if(!text.empty()){
+                else if(text == "/clear"){
+                    text.clear();
+
+                    clear();
+                    rows = 0;
+                    cols = 0;
+                    move(max_rows-1, cols);
+                    
+                    print_with_color(2, "Client: ");
+                }
+                else if(!text.empty()){
                     inputQueue.push(text);
 
                     move(rows, cols);
@@ -106,7 +120,6 @@ int main(){
                     move(max_rows-1, cols);
                     clrtoeol();
                     print_with_color(2, "Client: ");
-                    refresh();
                     rows++;
                 }
             }
@@ -117,7 +130,6 @@ int main(){
                     clrtoeol();
 
                     print_with_color(2, "Client: " + text);
-                    refresh();
                 }
             }
             else{
@@ -126,7 +138,6 @@ int main(){
                 clrtoeol();
 
                 print_with_color(2, "Client: " + text);
-                refresh();
             }
         }
 
@@ -162,7 +173,6 @@ int main(){
                     move(rows, cols);
                     print_with_color(1, "Server: " + std::string(buffer));
                     move(max_rows-1, tmp_cols);
-                    refresh();
                     rows++;
                 }
             }
