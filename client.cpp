@@ -22,7 +22,8 @@ int main(){
 
     int s = socket(AF_INET, SOCK_STREAM, 0);
     if(s < 0){
-        std::cout << "Failed to create socket" << std::endl;
+        endwin();
+        std::cerr << "Failed to create socket" << std::endl;
         return -1;
     }
 
@@ -67,17 +68,19 @@ int main(){
         ch = getch();
         if(ch != ERR){
             if(ch == '\n' || ch == KEY_ENTER){
-                inputQueue.push(text);
+                if(!text.empty()){
+                    inputQueue.push(text);
 
-                move(rows, cols);
-                printw("Client: %s", text.c_str());
+                    move(rows, cols);
+                    printw("Client: %s", text.c_str());
 
-                text.clear();
-                move(max_rows-1, cols);
-                clrtoeol();
-                printw("Client: ");
-                refresh();
-                rows++;
+                    text.clear();
+                    move(max_rows-1, cols);
+                    clrtoeol();
+                    printw("Client: ");
+                    refresh();
+                    rows++;
+                }
             }
             else if(ch == 127 || ch == KEY_BACKSPACE){
                 if(!text.empty()){
@@ -118,12 +121,12 @@ int main(){
                 ssize_t bytes_received = recv(s, buffer, sizeof(buffer), MSG_DONTWAIT);
                 if(bytes_received < 0){
                     if(errno != EAGAIN && errno != EWOULDBLOCK){
-                        std::cerr << "Recv error: " << strerror(errno) << std::endl;
+                        printw("Recv error: %s", strerror(errno));
                     }
                     continue;
                 }
                 else if(bytes_received == 0){
-                    std::cout << "Connection closed." << std::endl;
+                    printw("Connection closed.");
                     break;
                 }
                 else{
