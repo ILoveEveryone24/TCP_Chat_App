@@ -36,7 +36,12 @@ int main(){
     printw("Connecting");
     refresh();
     int connected = connect(s, (sockaddr*)&server_addr, server_addr_len);
-
+    
+    if(connected < 0 && errno != ECONNREFUSED){
+        endwin();
+        std::cerr << "Failed to connect" << std::endl;
+        return -1;
+    }
     while(errno == ECONNREFUSED){
         std::this_thread::sleep_for(std::chrono::seconds(1));
         connected = connect(s, (sockaddr*)&server_addr, server_addr_len);

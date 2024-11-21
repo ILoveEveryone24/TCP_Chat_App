@@ -1,10 +1,14 @@
-all: server client
+CXX := g++
+CXXFLAGS := -Wall -Wextra -pedantic -lncurses
 
-server:server.cpp
-	g++ -o server server.cpp -lncurses
+TARGETS := server client
 
-client:client.cpp
-	g++ -o client client.cpp -lncurses
+all: $(TARGETS)
+
+%: %.cpp
+	$(CXX) -o $@ $< $(CXXFLAGS)
 
 clean:
-	rm -rf client server
+	rm -f $(TARGETS)
+
+.PHONY: all clean
