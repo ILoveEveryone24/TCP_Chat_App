@@ -96,8 +96,13 @@ int main(){
                 if(text == "/exit"){
                     text.clear();
 
+                    move(rows, cols);
                     printw("Exiting...");
+                    move(max_rows-1, cols);
                     refresh();
+                    std::string exit_m = "Client disconnected...";
+                    send(s, exit_m.c_str(), exit_m.length(), 0);
+                    shutdown(s, SHUT_WR);
                     break;
                 }
                 else if(text == "/clear"){
@@ -165,7 +170,10 @@ int main(){
                     continue;
                 }
                 else if(bytes_received == 0){
+                    move(rows, cols);
                     printw("Connection closed.");
+                    move(max_rows-1, cols);
+                    shutdown(s, SHUT_RDWR);
                     break;
                 }
                 else{
