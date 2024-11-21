@@ -50,21 +50,26 @@ int main(){
     if(bind(s, (sockaddr*)&server_addr, server_addr_len) < 0){
         endwin();
         std::cerr << "Failed to bind the socket" << std::endl;
+        close(s);
         return -1;
     }
 
     if(listen(s, 1) < 0){
         endwin();
         std::cerr << "Failed to listen" << std::endl;
+        close(s);
         return -1;
     }
 
     sockaddr_in client_addr;
     socklen_t client_addr_len = sizeof(client_addr);
+    printw("Waiting for a client");
+    refresh();
     int client_s = accept(s, (sockaddr*)&client_addr, &client_addr_len);
     if(client_s < 0){
         endwin();
         std::cerr << "Failed to connect to the client" << std::endl;
+        close(s);
         return -1;
     }
     move(0,0);
@@ -155,7 +160,6 @@ int main(){
                 else if(bytes_received == 0){
                     printw("Client disconnected");
                     refresh();
-                    close(client_s);
                     break;
                 }
                 else{
@@ -171,6 +175,7 @@ int main(){
 
     }
    
+    close(client_s);
     close(s);
     endwin();
 

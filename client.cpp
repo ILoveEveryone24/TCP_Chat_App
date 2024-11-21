@@ -91,6 +91,11 @@ int main(){
         ch = getch();
         if(ch != ERR){
             if(ch == '\n' || ch == KEY_ENTER){
+                if(text == "/exit"){
+                    printw("Exiting...");
+                    refresh();
+                    break;
+                }
                 if(!text.empty()){
                     inputQueue.push(text);
 
